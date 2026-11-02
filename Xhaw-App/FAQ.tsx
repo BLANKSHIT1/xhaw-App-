@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet,
      ScrollView, TouchableOpacity } from 'react-native';
+import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-export default function FAQScreen({ navigation }) {
+type ScreenProps = { navigation: NavigationProp<ParamListBase> };
+
+export default function FAQScreen({ navigation }: ScreenProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigationItems = [
-    ['Home', 'Home'],
+     const navigationItems = [
+    ['Home', 'Homepage'], 
+    ['About Us', 'AboutUS'], 
     ['Calculate Fees', 'CalculateFees'],
-    ['Booking Prices', 'Booking'],
-    ['Contact Us', 'Contact']
+    ['Payment', 'Payment'],
+    ['Contact Us', 'ContactUS'], 
+    ['FAQ', 'FAQ'],
+    ['Sign Up', 'Signup'],
+     ['Venues', 'Venues'],
   ];
-
-  const navigateTo = (screen) => {
+  
+  const navigateTo = (screen: string) => {
     setMenuOpen(false);
     navigation?.navigate(screen);
   };
