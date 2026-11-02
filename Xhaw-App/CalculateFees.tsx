@@ -4,17 +4,21 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from './navigation/types';
 
 type ScreenProps = NativeStackScreenProps<RootStackParamList, 'CalculateFees'>;
+type MenuScreen = 'Home' | 'AboutUS' | 'Payment' | 'ContactUS' | 'FAQ' | 'Signup' | 'Venues' | 'CalculateFees';
 
 export default function CalculateFeesScreen({ navigation }: ScreenProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Package Options & Pricing
+  // Updated Package Options matching the web venue options & arena experiences
   const packagesList = [
     { name: 'PC Gaming Session', price: 100 },
     { name: 'Console Gaming', price: 100 },
-    { name: 'VR Experience', price: 150 },
     { name: 'Esports Tournament', price: 250 },
-    { name: 'Birthday Party Package', price: 2500 }
+    { name: 'Esports Training Package', price: 1500 },
+    { name: 'Birthday Party Package', price: 1500 },
+    { name: 'Virtual Reality Experience', price: 750 },
+    { name: 'Racing Simulator Challenge', price: 750 },
+    { name: 'Escape Room Challenge', price: 750 }
   ];
 
   const playerOptions = [1, 2, 3, 4, 5, 6, 8, 10];
@@ -29,19 +33,18 @@ export default function CalculateFeesScreen({ navigation }: ScreenProps) {
   const [showPackageModal, setShowPackageModal] = useState(false);
   const [showPlayerModal, setShowPlayerModal] = useState(false);
 
-
-   const navigationItems = [
-    ['Home', 'Homepage'], 
-    ['About Us', 'AboutUS'], 
-    ['Calculate Fees', 'CalculateFees'],
+  const navigationItems = [
+    ['Home', 'Home'],
+    ['About Us', 'AboutUS'],
     ['Payment', 'Payment'],
-    ['Contact Us', 'ContactUS'], 
+    ['Contact Us', 'ContactUS'],
     ['FAQ', 'FAQ'],
     ['Sign Up', 'Signup'],
-     ['Venues', 'Venues'],
+    ['Venues', 'Venues'],
+    ['Calculate Fees', 'CalculateFees'],
   ] as const;
 
-  const navigateTo = (screen: (typeof navigationItems)[number][1]) => {
+  const navigateTo = (screen: MenuScreen) => {
     setMenuOpen(false);
     navigation.navigate(screen);
   };
@@ -140,8 +143,7 @@ export default function CalculateFeesScreen({ navigation }: ScreenProps) {
         style={styles.dropdownBox}
         onPress={() => setShowPackageModal(true)}
       >
-        <Text style={styles.dropdownText}>
-          {selectedPackage.name} (R{selectedPackage.price})</Text>
+        <Text style={styles.dropdownText}>{selectedPackage.name} (R{selectedPackage.price})</Text>
         <Text style={styles.dropdownArrow}>▼</Text>
       </TouchableOpacity>
 
@@ -150,9 +152,7 @@ export default function CalculateFeesScreen({ navigation }: ScreenProps) {
         style={styles.dropdownBox}
         onPress={() => setShowPlayerModal(true)}
       >
-        <Text style={styles.dropdownText}>
-          {playerCount} 
-          {playerCount === 1 ? 'Player' : 'Players'}</Text>
+        <Text style={styles.dropdownText}>{playerCount} {playerCount === 1 ? 'Player' : 'Players'}</Text>
         <Text style={styles.dropdownArrow}>▼</Text>
       </TouchableOpacity>
 
@@ -189,7 +189,7 @@ export default function CalculateFeesScreen({ navigation }: ScreenProps) {
 
         <View style={styles.calcRow}>
           <Text style={styles.calcLabel}>Base Fee</Text>
-          <Text style={styles.calcValue}>R{baseRate.toFixed(2)} / hr</Text>
+          <Text style={styles.calcValue}>R{baseRate.toFixed(2)}</Text>
         </View>
 
         <View style={styles.calcRow}>
@@ -264,8 +264,7 @@ export default function CalculateFeesScreen({ navigation }: ScreenProps) {
                   setShowPlayerModal(false);
                 }}
               >
-                <Text style={styles.modalItemText}>{num} 
-                  {num === 1 ? 'Player' : 'Players'}</Text>
+                <Text style={styles.modalItemText}>{num} {num === 1 ? 'Player' : 'Players'}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity
@@ -285,7 +284,8 @@ export default function CalculateFeesScreen({ navigation }: ScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121225' },
+    backgroundColor: '#121225'
+  },
 
   header: {
     height: 55,
@@ -293,52 +293,62 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 12,
-    paddingRight: 12 },
+    paddingRight: 12
+  },
 
   logo: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: 'bold' },
+    fontWeight: 'bold'
+  },
 
   menu: {
     color: '#FFFFFF',
-    fontSize: 24 },
+    fontSize: 24
+  },
 
   menuButton: {
     paddingHorizontal: 8,
-    paddingVertical: 4 },
+    paddingVertical: 4
+  },
 
   navigationMenu: {
     backgroundColor: '#151329',
     paddingHorizontal: 16,
-    paddingVertical: 6 },
+    paddingVertical: 6
+  },
 
   navigationItem: {
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#29243D' },
+    borderBottomColor: '#29243D'
+  },
 
   navigationText: {
     color: '#FFFFFF',
-    fontSize: 14 },
+    fontSize: 14
+  },
 
   pinkLine: {
     height: 1,
-    backgroundColor: '#FF00FF' },
+    backgroundColor: '#FF00FF'
+  },
 
   pageTitle: {
     color: '#FFFFFF',
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 20,
-    marginLeft: 12 },
+    marginLeft: 12
+  },
 
   subtitle: {
     color: '#FF00FF',
     fontSize: 10,
     marginTop: 5,
     marginLeft: 12,
-    marginBottom: 15 },
+    marginBottom: 15
+  },
 
   dropdownBox: {
     backgroundColor: '#151329',
@@ -351,28 +361,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#29243D' },
+    borderColor: '#29243D'
+  },
 
   dropdownText: {
     color: '#FFFFFF',
-    fontSize: 11 },
+    fontSize: 11
+  },
 
   dropdownArrow: {
     color: '#777777',
-    fontSize: 10 },
+    fontSize: 10
+  },
 
   inputLabel: {
     color: '#AAAAAA',
     fontSize: 10,
     marginLeft: 12,
-    marginTop: 10 },
+    marginTop: 10
+  },
 
   timeSelectorRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 12,
     marginTop: 10,
-    marginBottom: 20 },
+    marginBottom: 20
+  },
 
   timeButton: {
     backgroundColor: '#151329',
@@ -382,11 +397,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#29243D' },
+    borderColor: '#29243D'
+  },
 
   timeButtonText: {
     color: '#FFFFFF',
-    fontSize: 18 },
+    fontSize: 18
+  },
 
   timeDisplay: {
     flex: 1,
@@ -395,12 +412,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#FF00FF' },
+    borderBottomColor: '#FF00FF'
+  },
 
   timeDisplayText: {
     color: '#FFFFFF',
     fontSize: 11,
-    fontWeight: 'bold' },
+    fontWeight: 'bold'
+  },
 
   fullDayButton: {
     backgroundColor: '#151329',
@@ -410,47 +429,57 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#29243D' },
+    borderColor: '#29243D'
+  },
 
   fullDayActive: {
-    backgroundColor: '#FF00FF' },
+    backgroundColor: '#FF00FF'
+  },
 
   fullDayText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontWeight: 'bold' },
+    fontWeight: 'bold'
+  },
 
   fullDayActiveText: {
-    color: '#000000' },
+    color: '#000000'
+  },
 
   contactBox: {
     backgroundColor: '#151329',
     marginHorizontal: 12,
     padding: 15,
-    borderRadius: 7 },
+    borderRadius: 7
+  },
 
   contactTitle: {
     color: '#FFFFFF',
     fontSize: 10,
     fontWeight: 'bold',
-    marginBottom: 15 },
+    marginBottom: 15
+  },
 
   calcRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10 },
+    marginBottom: 10
+  },
 
   calcLabel: {
     color: '#AAAAAA',
-    fontSize: 11 },
+    fontSize: 11
+  },
 
   calcValue: {
     color: '#FFFFFF',
-    fontSize: 11 },
+    fontSize: 11
+  },
 
   calcDiscount: {
     color: '#FF00FF',
-    fontSize: 11 },
+    fontSize: 11
+  },
 
   totalRow: {
     flexDirection: 'row',
@@ -458,17 +487,20 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingTop: 15,
     borderTopWidth: 1,
-    borderTopColor: '#29243D' },
+    borderTopColor: '#29243D'
+  },
 
   totalLabel: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: 'bold' },
+    fontWeight: 'bold'
+  },
 
   totalValue: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: 'bold' },
+    fontWeight: 'bold'
+  },
 
   sendButton: {
     height: 48,
@@ -479,51 +511,60 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     borderRadius: 6,
     alignItems: 'center',
-    justifyContent: 'center' },
+    justifyContent: 'center'
+  },
 
   sendButtonText: {
     color: '#000000',
     fontSize: 12,
-    fontWeight: 'bold' },
+    fontWeight: 'bold'
+  },
 
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.8)',
-    paddingHorizontal: 20 },
+    paddingHorizontal: 20
+  },
 
   modalContent: {
     backgroundColor: '#151329',
     borderRadius: 8,
     padding: 20,
     borderWidth: 1,
-    borderColor: '#FF00FF' },
+    borderColor: '#FF00FF'
+  },
 
   modalTitle: {
     color: '#FFFFFF',
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 15,
-    textAlign: 'center' },
+    textAlign: 'center'
+  },
 
   modalItem: {
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#29243D' },
+    borderBottomColor: '#29243D'
+  },
 
   modalItemText: {
     color: '#FFFFFF',
-    fontSize: 12 },
+    fontSize: 12
+  },
 
   modalCloseButton: {
     marginTop: 15,
     paddingVertical: 10,
     alignItems: 'center',
     backgroundColor: '#29243D',
-    borderRadius: 5 },
+    borderRadius: 5
+  },
 
   modalCloseText: {
     color: '#FF00FF',
     fontSize: 11,
-    fontWeight: 'bold' }
+    fontWeight: 'bold'
+  }
 });
