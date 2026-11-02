@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, 
-    ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 export default function BookingPricesScreen({ navigation }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigationItems = [
+const navigationItems = [
     ['Home', 'Homepage'], 
     ['About Us', 'AboutUS'], 
     ['Overview', 'Overview'],
@@ -294,6 +293,6 @@ borderRadius: 6,
  justifyContent: 'center' },
 
   sendButtonText: { color: '#000000', 
-    fontSize: 12, 
-    fontWeight: 'bold' },
+    fontSize: 12,
+     fontWeight: 'bold' },
 });
