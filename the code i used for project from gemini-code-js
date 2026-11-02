@@ -1,0 +1,299 @@
+/* -----------------------------------------
+   AI CODE ATTRIBUTION & REFERENCE SHEET
+   Project: Next Level Gaming Mobile Application
+   Language: JavaScript / React Native
+   Description: Key technical components, calculation algorithms, 
+                and layout structures developed with AI assistance.
+----------------------------------------- */
+
+
+/* -----------------------------------------
+   1. Dynamic Fee & Tiered Squad Discount Algorithm
+   Calculates base rates, duration, subtotal, and multi-tier discounts 
+   (2 players = 5%, 3 players = 10%, 4+ players = 15%).
+----------------------------------------- */
+
+// Array of packages with associated rates matching the arena inventory
+const packagesList = [
+  { name: 'PC Gaming Session', price: 100 },
+  { name: 'Console Gaming', price: 100 },
+  { name: 'Esports Tournament', price: 250 },
+  { name: 'Esports Training Package', price: 1500 },
+  { name: 'Birthday Party Package', price: 1500 },
+  { name: 'Virtual Reality Experience', price: 750 },
+  { name: 'Racing Simulator Challenge', price: 750 },
+  { name: 'Escape Room Challenge', price: 750 }
+];
+
+// Calculation function executed on every state update
+const calculateTotals = (selectedPackage, playerCount, hours, isFullDay) => {
+  // Determine base hourly or flat package rate
+  const baseRate = selectedPackage.price;
+  
+  // Set active hours to 8 if Full Day toggle is enabled, otherwise use counter
+  const activeHours = isFullDay ? 8 : hours;
+  
+  // Calculate initial subtotal
+  const subtotal = baseRate * activeHours * playerCount;
+
+  // Determine discount percentage based on squad size
+  let discountRate = 0;
+  if (playerCount >= 4) {
+    discountRate = 0.15; // 15% discount for 4 or more players
+  } else if (playerCount === 3) {
+    discountRate = 0.10; // 10% discount for 3 players
+  } else if (playerCount === 2) {
+    discountRate = 0.05; // 5% discount for 2 players
+  }
+
+  // Calculate final monetary values
+  const discountAmount = subtotal * discountRate;
+  const totalEstimate = subtotal - discountAmount;
+
+  return {
+    subtotal: subtotal.toFixed(2),
+    discountAmount: discountAmount.toFixed(2),
+    totalEstimate: totalEstimate.toFixed(2),
+    activeHours
+  };
+};
+
+
+/* -----------------------------------------
+   2. Cross-Screen Data Navigation & Parameter Passing
+   Packages the calculated booking object and transmits it seamlessly 
+   from the Fee Calculator to the Payment screen via React Navigation.
+----------------------------------------- */
+
+// Order Handler in CalculateFeesScreen.js
+const handlePlaceOrder = (navigation, selectedPackage, playerCount, activeHours, isFullDay, subtotal, discountAmount, totalEstimate) => {
+  const orderData = {
+    packageName: selectedPackage.name,
+    playerCount: playerCount,
+    hours: activeHours,
+    isFullDay: isFullDay,
+    subtotal: subtotal.toFixed(2),
+    discountAmount: discountAmount.toFixed(2),
+    totalEstimate: totalEstimate.toFixed(2)
+  };
+
+  // Direct route navigation passing data object as route parameter
+  navigation.navigate('Payment', { bookingData: orderData });
+};
+
+// Data Receiver in PaymentScreen.js
+const getReceivedBookingData = (route) => {
+  // Fallback default values provided to prevent undefined crashes
+  return route.params?.bookingData || {
+    packageName: 'PC Gaming Session',
+    playerCount: 4,
+    hours: 3,
+    subtotal: '1200.00',
+    discountAmount: '180.00',
+    totalEstimate: '1020.00'
+  };
+};
+
+
+/* -----------------------------------------
+   3. Modal State & Selection Picker System
+   Manages custom pop-up selection modals for choosing packages 
+   and player counts without relying on external native pickers.
+----------------------------------------- */
+
+// Component structure for rendering modal selection lists
+const renderPackageModal = (showPackageModal, setShowPackageModal, setSelectedPackage) => {
+  return (
+    <Modal visible={showPackageModal} transparent={true} animationType="slide">
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Select Package</Text>
+          {packagesList.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.modalItem}
+              onPress={() => {
+                setSelectedPackage(item);
+                setShowPackageModal(false); // Close modal on selection
+              }}
+            >
+              <Text style={styles.modalItemText}>{item.name} — R{item.price}</Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={() => setShowPackageModal(false)}
+          >
+            <Text style={styles.modalCloseText}>CANCEL</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+
+/* -----------------------------------------
+   4. Dynamic Accordion & Collapsible List Logic
+   Handles expanding and collapsing single FAQ entries dynamically.
+----------------------------------------- */
+
+const FAQItem = ({ question, answer }) => {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <View style={styles.faqItem}>
+      <TouchableOpacity 
+        style={styles.faqHeader} 
+        onPress={() => setExpanded(!expanded)}
+      >
+        <Text style={styles.faqQuestion}>{question}</Text>
+        <Text style={styles.faqIcon}>{expanded ? '▲' : '▼'}</Text>
+      </TouchableOpacity>
+      
+      {/* Conditional rendering based on toggle state */}
+      {expanded && (
+        <View style={styles.faqAnswerContainer}>
+          <Text style={styles.faqAnswer}>{answer}</Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
+
+/* -----------------------------------------
+   5. Conditional Array Mapping & Empty State Rendering
+   Renders booking history cards if records exist, otherwise displays 
+   a custom empty call-to-action container.
+----------------------------------------- */
+
+const renderBookingHistory = (bookings, navigateTo) => {
+  if (bookings.length === 0) {
+    return (
+      <View style={styles.emptyBox}>
+        <Text style={styles.emptyTitle}>NO BOOKINGS YET</Text>
+        <Text style={styles.emptyText}>
+          You haven't reserved any sessions. Select a package to book your spot.
+        </Text>
+        <TouchableOpacity style={styles.bookNowButton} onPress={() => navigateTo('Booking')}>
+          <Text style={styles.bookNowText}>BOOK A SESSION</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  return bookings.map((item) => (
+    <View key={item.id} style={styles.historyCard}>
+      <View style={styles.cardHeader}>
+        <Text style={styles.bookingId}>{item.id}</Text>
+        <View style={item.status === 'CONFIRMED' ? styles.statusConfirmed : styles.statusCompleted}>
+          <Text style={styles.statusText}>{item.status}</Text>
+        </View>
+      </View>
+      <Text style={styles.packageTitle}>{item.package}</Text>
+      <View style={styles.cardFooter}>
+        <Text style={styles.totalLabel}>Total Paid:</Text>
+        <Text style={styles.totalValue}>{item.total}</Text>
+      </View>
+    </View>
+  ));
+};
+
+
+/* -----------------------------------------
+   6. Custom Formatted StyleSheet Object
+   Uses individual line-breaks after every style property and bracket 
+   to ensure clean visual separation across all UI elements.
+----------------------------------------- */
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#121225'
+  },
+
+  header: {
+    height: 55,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingLeft: 12,
+    paddingRight: 12
+  },
+
+  logo: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: 'bold'
+  },
+
+  menu: {
+    color: '#FFFFFF',
+    fontSize: 24
+  },
+
+  menuButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 4
+  },
+
+  pinkLine: {
+    height: 1,
+    backgroundColor: '#FF00FF'
+  },
+
+  dropdownBox: {
+    backgroundColor: '#151329',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: 45,
+    marginHorizontal: 12,
+    marginBottom: 10,
+    paddingHorizontal: 12,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#29243D'
+  },
+
+  contactBox: {
+    backgroundColor: '#151329',
+    marginHorizontal: 12,
+    padding: 15,
+    borderRadius: 7
+  },
+
+  sendButton: {
+    height: 48,
+    backgroundColor: '#FF00FF',
+    marginTop: 25,
+    marginLeft: 12,
+    marginRight: 12,
+    marginBottom: 30,
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+
+  sendButtonText: {
+    color: '#000000',
+    fontSize: 12,
+    fontWeight: 'bold'
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    paddingHorizontal: 20
+  },
+
+  modalContent: {
+    backgroundColor: '#151329',
+    borderRadius: 8,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#FF00FF'
+  }
+});
