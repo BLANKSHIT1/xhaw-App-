@@ -3,7 +3,19 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 
 export default function AboutScreen({ navigation }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigationItems = [['Home', 'Home'], ['Booking', 'Booking'], ['Contact Us', 'Contact']];
+  const navigationItems = [
+    ['Home', 'Homepage'], 
+    ['About Us', 'AboutUS'], 
+    ['Overview', 'Overview'],
+    ['Booking', 'Booking'], 
+    ['Payment', 'Payment'],
+    ['Contact Us', 'ContactUS'], 
+    ['FAQ', 'FAQ'],
+     ['Calculate Fees', 'CalculateFees'],
+    ['Sign Up', 'Signup'],
+     ['Venues', 'Venues'],
+  ];
+
 
   const navigateTo = (screen) => {
     setMenuOpen(false);
