@@ -83,15 +83,6 @@ different sections of the application.
 
 ---
 
-## 6. Technologies Used
-
-- React Native
-- JavaScript
-- StyleSheet
-- GitHub
-- Figma
-
----
 
 ## 7. Design
 
