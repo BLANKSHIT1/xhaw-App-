@@ -125,4 +125,6 @@ change the backgroud of the app to black 121225 of all the screens
 
 
 [the code i used for project from Ai model gemini](<the code i used for project from gemini-code-js>)
+
+
 [App youtube video](<https://youtube.com/shorts/O4BrBaEF-CM?feature=share>)
