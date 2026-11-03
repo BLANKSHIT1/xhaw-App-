@@ -1,13 +1,4 @@
 /* -----------------------------------------
-   AI CODE ATTRIBUTION & REFERENCE SHEET
-   Project: Next Level Gaming Mobile Application
-   Language: JavaScript / React Native
-   Description: Key technical components, calculation algorithms, 
-                and layout structures developed with AI assistance.
------------------------------------------ */
-
-
-/* -----------------------------------------
    1. Dynamic Fee & Tiered Squad Discount Algorithm
    Calculates base rates, duration, subtotal, and multi-tier discounts 
    (2 players = 5%, 3 players = 10%, 4+ players = 15%).
