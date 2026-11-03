@@ -1,26 +1,45 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, 
-    ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 type ScreenProps = { navigation: NavigationProp<ParamListBase> };
 
 export default function SignUpScreen({ navigation }: ScreenProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-       const navigationItems = [
-    ['Home', 'Homepage'], 
-    ['About Us', 'AboutUS'], 
+  
+  // State variables for all text inputs
+  const [firstName, setFirstName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
+  const navigationItems = [
+    ['Home', 'Home'], 
+    ['About Us', 'About'], 
     ['Calculate Fees', 'CalculateFees'],
     ['Payment', 'Payment'],
-    ['Contact Us', 'ContactUS'], 
+    ['Contact Us', 'Contact'], 
     ['FAQ', 'FAQ'],
-    ['Sign Up', 'Signup'],
-     ['Venues', 'Venues'],
+    ['Sign Up', 'SignUp'],
+    ['Venues', 'Venues']
   ];
 
   const navigateTo = (screen: string) => {
     setMenuOpen(false);
     navigation?.navigate(screen);
+  };
+
+  // Function to handle the sign-up button click
+  const handleSignUp = () => {
+    // Check if all fields are filled out
+    if (firstName && surname && email && phone && password && confirmPassword) {
+      // You can add more checks here (like checking if passwords match)
+      navigateTo('Home');
+    } else {
+      Alert.alert('Missing Information', 'Please fill in all the text inputs to sign up.');
+    }
   };
 
   return (
@@ -66,6 +85,8 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
         style={styles.input}
         placeholder="e.g. Sipho"
         placeholderTextColor="#777777"
+        value={firstName}
+        onChangeText={setFirstName}
       />
 
       {/* Surname */}
@@ -74,6 +95,8 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
         style={styles.input}
         placeholder="e.g. Dlamini"
         placeholderTextColor="#777777"
+        value={surname}
+        onChangeText={setSurname}
       />
 
       {/* Email */}
@@ -83,6 +106,9 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
         placeholder="sipho@example.com"
         placeholderTextColor="#777777"
         keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
       />
 
       {/* Phone Number */}
@@ -92,6 +118,8 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
         placeholder="+27 82 123 4567"
         placeholderTextColor="#777777"
         keyboardType="phone-pad"
+        value={phone}
+        onChangeText={setPhone}
       />
 
       {/* Password */}
@@ -101,6 +129,8 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
         placeholder="********"
         placeholderTextColor="#777777"
         secureTextEntry={true}
+        value={password}
+        onChangeText={setPassword}
       />
 
       {/* Confirm Password */}
@@ -110,14 +140,19 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
         placeholder="********"
         placeholderTextColor="#777777"
         secureTextEntry={true}
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
       />
 
       {/* SIGN UP BUTTON*/}
-      <TouchableOpacity style={styles.sendButton}>
+      <TouchableOpacity style={styles.sendButton} onPress={handleSignUp}>
         <Text style={styles.sendButtonText}>SIGN UP</Text>
       </TouchableOpacity>
 
-      <Text style={styles.loginLink}>Already have an account? Login</Text>
+      {/* SWITCH TO SIGN IN LINK */}
+      <TouchableOpacity onPress={() => navigateTo('SignIn')}>
+        <Text style={styles.loginLink}>Already have an account? Login</Text>
+      </TouchableOpacity>
       
     </ScrollView>
   );
@@ -126,67 +161,67 @@ export default function SignUpScreen({ navigation }: ScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121225',
-  },
+    backgroundColor: '#121225' },
+    
   header: {
     height: 55,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 12,
-    paddingRight: 12,
-  },
+    paddingRight: 12 },
+    
   logo: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' },
+    
   menu: {
     color: '#FFFFFF',
-    fontSize: 24,
-  },
+    fontSize: 24 },
+    
   menuButton: {
     paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
+    paddingVertical: 4 },
+    
   navigationMenu: {
     backgroundColor: '#151329',
     paddingHorizontal: 16,
-    paddingVertical: 6,
-  },
+    paddingVertical: 6 },
+    
   navigationItem: {
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#29243D',
-  },
+    borderBottomColor: '#29243D' },
+    
   navigationText: {
     color: '#FFFFFF',
-    fontSize: 14,
-  },
+    fontSize: 14 },
+    
   pinkLine: {
     height: 1,
-    backgroundColor: '#FF00FF',
-  },
+    backgroundColor: '#FF00FF' },
+    
   pageTitle: {
     color: '#FFFFFF',
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 20,
-    marginLeft: 12,
-  },
+    marginLeft: 12 },
+    
   subtitle: {
     color: '#FF00FF',
     fontSize: 10,
     marginTop: 5,
     marginLeft: 12,
-    marginBottom: 20,
-  },
+    marginBottom: 20 },
+    
   inputLabel: {
     color: '#AAAAAA',
     fontSize: 10,
     marginLeft: 12,
-    marginTop: 15,
-  },
+    marginTop: 15 },
+    
   input: {
     height: 45,
     backgroundColor: '#151329',
@@ -198,8 +233,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 11,
     borderWidth: 1,
-    borderColor: '#29243D',
-  },
+    borderColor: '#29243D' },
+    
   sendButton: {
     height: 48,
     backgroundColor: '#FF00FF',
@@ -208,18 +243,17 @@ const styles = StyleSheet.create({
     marginRight: 12,
     borderRadius: 6,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center' },
+    
   sendButtonText: {
     color: '#000000',
     fontSize: 12,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' },
+    
   loginLink: {
     color: '#FF00FF',
     fontSize: 11,
     textAlign: 'center',
     marginTop: 20,
-    marginBottom: 40,
-  }
+    marginBottom: 40 }
 });

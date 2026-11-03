@@ -1,26 +1,46 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet,
-     ScrollView, TouchableOpacity, TextInput } from 'react-native';
+  ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
 import type { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 type ScreenProps = { navigation: NavigationProp<ParamListBase> };
 
 export default function ContactScreen({ navigation }: ScreenProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-      const navigationItems = [
-    ['Home', 'Homepage'], 
-    ['About Us', 'AboutUS'], 
+  
+  // State variables for the contact form
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+
+  // Fixed route names to perfectly match your App.js navigation stack
+  const navigationItems = [
+    ['Home', 'Home'], 
+    ['About Us', 'About'], 
     ['Calculate Fees', 'CalculateFees'],
     ['Payment', 'Payment'],
-    ['Contact Us', 'ContactUS'], 
+    ['Contact Us', 'Contact'], 
     ['FAQ', 'FAQ'],
-    ['Sign Up', 'Signup'],
-     ['Venues', 'Venues'],
+    ['Sign Up', 'SignUp'],
+    ['Venues', 'Venues']
   ];
 
   const navigateTo = (screen: string) => {
     setMenuOpen(false);
     navigation?.navigate(screen);
+  };
+
+  // Function to handle the Send Message button click
+  const handleSendMessage = () => {
+    if (name && email && phone && message) {
+      // Optional: Show a success popup before going home
+      Alert.alert('Transmission Sent', 'We have received your message!', [
+        { text: 'OK', onPress: () => navigateTo('Home') }
+      ]);
+    } else {
+      Alert.alert('Missing Information', 'Please fill out all fields to send a message.');
+    }
   };
 
   return (
@@ -79,6 +99,8 @@ export default function ContactScreen({ navigation }: ScreenProps) {
         style={styles.input}
         placeholder="Your Name"
         placeholderTextColor="#777777"
+        value={name}
+        onChangeText={setName}
       />
 
       <TextInput
@@ -86,6 +108,9 @@ export default function ContactScreen({ navigation }: ScreenProps) {
         placeholder="Your Email"
         placeholderTextColor="#777777"
         keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
       />
 
       <TextInput
@@ -93,6 +118,8 @@ export default function ContactScreen({ navigation }: ScreenProps) {
         placeholder="Your Phone Number"
         placeholderTextColor="#777777"
         keyboardType="phone-pad"
+        value={phone}
+        onChangeText={setPhone}
       />
 
       <TextInput
@@ -100,10 +127,12 @@ export default function ContactScreen({ navigation }: ScreenProps) {
         placeholder="Write your message..."
         placeholderTextColor="#777777"
         multiline={true}
+        value={message}
+        onChangeText={setMessage}
       />
 
-      {/* SEND BUTTON */}
-      <TouchableOpacity style={styles.sendButton}>
+      {/* SEND BUTTON - Now connected to handleSendMessage */}
+      <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
         <Text style={styles.sendButtonText}>SEND MESSAGE</Text>
       </TouchableOpacity>
 
@@ -131,85 +160,85 @@ export default function ContactScreen({ navigation }: ScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#121225',
-  },
+    backgroundColor: '#121225' },
+    
   header: {
     height: 55,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingLeft: 12,
-    paddingRight: 12,
-  },
+    paddingRight: 12 },
+    
   logo: {
     color: '#FFFFFF',
     fontSize: 14,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' },
+    
   menu: {
     color: '#FFFFFF',
-    fontSize: 24,
-  },
+    fontSize: 24 },
+    
   menuButton: {
     paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
+    paddingVertical: 4 },
+    
   navigationMenu: {
     backgroundColor: '#151329',
     paddingHorizontal: 16,
-    paddingVertical: 6,
-  },
+    paddingVertical: 6 },
+    
   navigationItem: {
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#29243D',
-  },
+    borderBottomColor: '#29243D' },
+    
   navigationText: {
     color: '#FFFFFF',
-    fontSize: 14,
-  },
+    fontSize: 14 },
+    
   pinkLine: {
     height: 1,
-    backgroundColor: '#FF00FF',
-  },
+    backgroundColor: '#FF00FF' },
+    
   pageTitle: {
     color: '#FFFFFF',
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 20,
-    marginLeft: 12,
-  },
+    marginLeft: 12 },
+    
   subtitle: {
     color: '#FF00FF',
     fontSize: 10,
     marginTop: 5,
-    marginLeft: 12,
-  },
+    marginLeft: 12 },
+    
   contactBox: {
     backgroundColor: '#151329',
     marginTop: 18,
     marginLeft: 12,
     marginRight: 12,
     padding: 15,
-    borderRadius: 7,
-  },
+    borderRadius: 7 },
+    
   contactTitle: {
     color: '#FFFFFF',
     fontSize: 12,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' },
+    
   contactText: {
     color: '#AAAAAA',
     fontSize: 10,
-    marginTop: 8,
-  },
+    marginTop: 8 },
+    
   sectionTitle: {
     color: '#FF00FF',
     fontSize: 11,
     fontWeight: 'bold',
     marginTop: 20,
-    marginLeft: 12,
-  },
+    marginLeft: 12 },
+    
   input: {
     height: 45,
     backgroundColor: '#151329',
@@ -219,8 +248,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
     paddingLeft: 12,
     borderRadius: 5,
-    fontSize: 11,
-  },
+    fontSize: 11 },
+    
   messageInput: {
     height: 110,
     backgroundColor: '#151329',
@@ -232,8 +261,8 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     borderRadius: 5,
     fontSize: 11,
-    textAlignVertical: 'top',
-  },
+    textAlignVertical: 'top' },
+    
   sendButton: {
     height: 48,
     backgroundColor: '#FF00FF',
@@ -242,13 +271,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
     borderRadius: 6,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center' },
+    
   sendButtonText: {
     color: '#000000',
     fontSize: 12,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' },
+    
   communityBox: {
     backgroundColor: '#111126',
     marginTop: 20,
@@ -256,23 +285,23 @@ const styles = StyleSheet.create({
     marginRight: 12,
     marginBottom: 30,
     padding: 15,
-    borderRadius: 7,
-  },
+    borderRadius: 7 },
+    
   communityTitle: {
     color: '#FF00FF',
     fontSize: 11,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' },
+    
   communityText: {
     color: '#999999',
     fontSize: 10,
     lineHeight: 16,
-    marginTop: 8,
-  },
+    marginTop: 8 },
+    
   socialRow: {
     flexDirection: 'row',
-    marginTop: 15,
-  },
+    marginTop: 15 },
+    
   socialButton: {
     backgroundColor: '#FF00FF',
     paddingTop: 10,
@@ -280,11 +309,10 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     paddingRight: 14,
     marginRight: 8,
-    borderRadius: 5,
-  },
+    borderRadius: 5 },
+    
   socialText: {
     color: '#000000',
     fontSize: 9,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold' }
 });
